@@ -5,8 +5,10 @@ import static com.querydsl.core.types.ExpressionUtils.count;
 import java.util.List;
 
 import com.example.querydsl.demo.model.Academy;
+import com.example.querydsl.demo.model.AcademyTeacher;
 import com.example.querydsl.demo.model.QAcademy;
 import com.example.querydsl.demo.model.QStudent;
+import com.example.querydsl.demo.model.QTeacher;
 import com.example.querydsl.demo.model.StudentCount;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.ExpressionUtils;
@@ -57,4 +59,15 @@ public class AcademyRepositoryImpl extends QuerydslRepositorySupport implements 
 									.from(academy).fetch();
 	}
 
+	public List<AcademyTeacher> findAllAcademyTeacher() {
+
+		QAcademy academy = QAcademy.academy;
+		QTeacher teacher = QTeacher.teacher;
+
+		return from(academy).select(Projections.fields(AcademyTeacher.class,
+														academy.name.as("academyName"),
+														teacher.name.as("teacherName")
+							)).join(teacher).on(academy.id.eq(teacher.academyId)).fetch();
+
+	}
 }
